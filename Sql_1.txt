@@ -1,0 +1,145 @@
+CREATE DATABASE `minions`;
+USE `minions`;
+
+CREATE TABLE `minions`(
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(30),
+`age` INT
+);
+
+CREATE TABLE `towns`(
+`town_id` INT PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(30)
+);
+
+ALTER TABLE `minions`
+ADD CONSTRAINT
+PRIMARY KEY minions(`id`);
+
+
+
+CREATE TABLE `products`(
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(30) NOT NULL,
+`category_id` INT NOT NULL 
+);
+
+ALTER TABLE `towns`
+CHANGE COLUMN `town_id` `id` INT;
+
+ALTER TABLE `minions`
+ADD COLUMN `town_id` INT,
+ADD CONSTRAINT `fk_minions_towns` 
+FOREIGN KEY `minions`(`town_id`)
+REFERENCES `towns`(`id`);
+
+INSERT INTO `towns`(`id`,`name`)
+VALUES("1", "Sofia"),
+("2", "Plovdiv"),
+("3", "Varna");
+
+INSERT INTO `minions`(`id`,`name`,`age`,`town_id`)
+VALUES("1", "Kevin", "22", "1"),
+("2", "Bob", "15", "3"),
+("3", "Steward", NULL, "2");
+
+TRUNCATE TABLE `minions`;
+DROP TABLE `minions`;
+DROP TABLE `towns`;
+
+ALTER TABLE `users`
+DROP PRIMARY KEY,
+ADD CONSTRAINT `pk_users_2`
+PRIMARY KEY `users`(`id`,`username`);
+/*
+ALTER TABLE `users`
+CHANGE COLUMN ;
+*/
+CREATE DATABASE `movies`;
+USE `movies`;
+
+CREATE DATABASE `car`;
+USE`car`;
+CREATE TABLE `categories`(
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`category` VARCHAR(30),
+`daily_rate`DOUBLE(2,1),
+`weekly_rate`DOUBLE(2,1),
+`monthly_rate`DOUBLE(2,1),
+`weekend_rate`DOUBLE(2,1)
+);
+
+
+INSERT INTO `categories`(`category`)
+VALUES
+("action"),
+("drama"),
+("comedy");
+
+CREATE TABLE `cars`(
+ `id`INT PRIMARY KEY AUTO_INCREMENT,
+ `plate_number`VARCHAR(10) NOT NULL, 
+ `make`DATE, 
+ `model`VARCHAR(30) NOT NULL,
+ `car_year`YEAR, 
+ `category_id` INT, 
+ `doors`INT, 
+ `picture`BLOB, 
+ `car_condition`TEXT, 
+ `available`BOOLEAN,
+ CONSTRAINT fk_cars_category
+ FOREIGN KEY cars(`id`) REFERENCES categories(`id`)
+);
+
+CREATE TABLE `employees`(
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`first_name` VARCHAR(30) ,
+`last_name` VARCHAR(30) ,
+`title`VARCHAR(30),
+`notes`TEXT
+);
+INSERT INTO `cars`(`plate_number`,`model`)
+VALUES
+("1234","toyota"),
+("5678", "bmw"),
+("9101", "skoda");
+
+CREATE TABLE `customers`(
+ `id`INT PRIMARY KEY AUTO_INCREMENT,
+ `driver_licence_number`INT(6), 
+ `full_name`VARCHAR(31), 
+ `address`VARCHAR(20), 
+ `city`VARCHAR(20), 
+ `zip_code`INT(4), 
+ `notes`TEXT);
+
+
+
+CREATE TABLE `rental_orders` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `employee_id` INT,
+    `customer_id` INT,
+    `car_id` INT,
+    `car_condition` TEXT,
+    `tank_level` INT,
+    `kilometrage_start` INT,
+    `kilometrage_end` INT,
+    `total_kilometrage` INT(255),
+    `start_date` DATETIME,
+    `end_date` DATETIME,
+    `total_days` INT,
+    `rate_applied` DOUBLE,
+    `tax_rate` DOUBLE,
+    `order_status` BOOLEAN,
+    `notes` TEXT,
+    CONSTRAINT fk_rental_orders_employee FOREIGN KEY (employee_id)
+        REFERENCES employees (id),
+    CONSTRAINT fk_rental_orders_customer FOREIGN KEY (customer_id)
+        REFERENCES customers (id),
+    CONSTRAINT fk_rental_orders_car FOREIGN KEY (car_id)
+        REFERENCES cars (id)
+);
+
+
+
+;
